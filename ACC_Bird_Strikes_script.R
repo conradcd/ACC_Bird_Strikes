@@ -61,4 +61,72 @@ for(i in seq(1, nrow(full_set))){
 full_set = cbind(full_set, Survive_full)
 Survive_full = full_set$Survive_full
 
+# Model survival based on species and duration of care 
+glm_full = glm(full_set$Survive_full ~ full_set$Species_Abv + full_set$Duration.of.Care)
+summary(glm_full)
+plot(glm_full)
 
+# Based on P-value, "Duration of Care" is most significant, which stands to reason,
+# as birds that died or were euathanized would have shorter durations.
+# There are some statistically significant species with relatively high T-values:
+# AMKE (American Kestrel): 4.085
+# BAEA (Bald Eagle): 3.576
+# BDOW (Barred Owl): 3.89
+# BNOW (Barn Owl): 3.65
+# EASO (Eastern Screech Owl): 4.625
+# MIKI (Mississippi Kite): 4.097
+
+# In each of these, species is positively correlated with survival. 
+# Each of these species is highly represented, so it's possible the bird hospital
+# is simply more experienced in dealing with them
+
+# The older dataset (1991-2013) has more consistent nomenclature on "Details of Rescue",
+# so examine the factors and see if any play a significant role in survival
+
+# Old data read CSV
+require(RCurl)
+old = read.csv(text = getURL("https://raw.githubusercontent.com/conradcd/ACC_Bird_Strikes/master/1991-2013.csv"), header = T)
+
+# Factors of "Details of Rescue"
+unique(old$Details.of.rescue)
+# ...Brutal. Need to clean these up to make any sense of them 
+# "S ____" stands for 'suspected' and according to my contact at the Birds of Prey center, they're usually accurate
+Details = table(old$Details.of.rescue)
+sort(Details)
+
+# Create new column narrowing down the factors to work with 
+Details_clean = c()
+Details_clean = old$Details_clean
+for(i in seq(1, nrow(old))) {
+  if(old$Details.of.rescue[i] == "ORPHANED" | old$Details.of.rescue[i] == "TRANSFER IN/ORPHANED" | old$Details.of.rescue[i] == "ORPHANED/EMACIATION" | old$Details.of.rescue[i] == "ORPHANED/FFN" | old$Details.of.rescue[i] == "ORPHANED/NEST DEST" | old$Details.of.rescue[i] == "ORPHANED/FLEDGLING" | old$Details.of.rescue[i] == "ORPHANED: FLEDGLING" | old$Details.of.rescue[i] == "ORPHANED: FFN" | old$Details.of.rescue[i] == "ORPHANED: TREE CUT" | old$Details.of.rescue[i] == "ORPHANED: NEST DEST" | old$Details.of.rescue[i] == "ORPHAN/KIDNAP" | old$Details.of.rescue[i] == "ORPHANED: JUMPED" | old$Details.of.rescue[i] == "Orphaned: FFN" | old$Details.of.rescue[i] == "ORPHANED: BRANCHER" | old$Details.of.rescue[i] == "ORPHANED/KIDNAPPED" | old$Details.of.rescue[i] == "ORPHANED/KIDNAP" | old$Details.of.rescue[i] == "ORPHANED/TREE CUT") {
+    Details_clean[i] = "Orphaned"
+  }
+  else if(old$Details.of.rescue[i] == "COLLISION" | old$Details.of.rescue[i] == "S COLLISION" | old$Details.of.rescue[i] == "TRANSFER IN/S COLLISION" | old$Details.of.rescue[i] == "TRANSFER IN/COLLISION" | old$Details.of.rescue[i] == "COLLISION/ENTANGLED" | old$Details.of.rescue[i] == "COLLISION/GUNSHOT" | old$Details.of.rescue[i] == "S COLLISION/GUNSHOT" | old$Details.of.rescue[i] == "S COLLISION/INFECTION" | old$Details.of.rescue[i] == "S COLLSION" | old$Details.of.rescue[i] == "S COLLISION/EMAC" | old$Details.of.rescue[i] == "COLLISION: FFN") {
+    Details_clean[i] = "Collision"
+  }
+  else if(old$Details.of.rescue[i] == "EMACIATION" | old$Details.of.rescue[i] == "TRANSFER IN/EMACIATION" | old$Details.of.rescue[i] == "TRAPPED/EMACIATION" | old$Details.of.rescue[i] == "TRAPPED/EMACIATED") {
+    Details_clean[i] = "Emaciated"
+  }
+  else if(old$Details.of.rescue[i] == "HBC" | old$Details.of.rescue[i] == "S HBC/GUNSHOT" | old$Details.of.rescue[i] == "HBC/GUNSHOT" | old$Details.of.rescue[i] == "TRANSFER IN/S HBC" | old$Details.of.rescue[i] == "HBC/ENTANGLED" | old$Details.of.rescue[i] == "HBC/ S COLLISION") {
+    Details_clean[i] = "HBC"
+  }
+  else if(old$Details.of.rescue[i] == "GUNSHOT" | old$Details.of.rescue[i] == "GUNSHOT" | old$Details.of.rescue[i] == "GUNSHOT/SPP CONFLICT") {
+    Details_clean[i] = "Gunshot"
+  }
+}
+old = cbind(old, Details_clean)
+Details_clean = old$Details_clean
+# This isn't doing what it is supposed to 
+
+# Old binary survive
+Survive_old = c()
+for(i in seq(1, nrow(old))){
+  if(old$Disposition[i]=="Died" | old$Disposition[i]=="Euthanized" | old$Disposition[i]=="DIED" | old$Disposition[i]=="NR/EUTHANIZED" | old$Disposition[i]=="NR/DIED" | old$Disposition[i]=="TRANSFERRED/EUTHANIZED" | old$Disposition[i]=="TRANSFERRED/DIED") {
+    Survive_old[i] = 0
+  }
+  else if(old$Disposition[i]== "Released" | old$Disposition[i]=="Self-Release" | old$Disposition[i]=="RELEASED" | old$Disposition[i]=="NR/RELEASED") {
+    Survive_old[i] = 1
+  }
+}
+old = cbind(old, Survive_old)
+Survive_old = old$Survive_old
