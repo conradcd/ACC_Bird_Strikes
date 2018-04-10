@@ -80,6 +80,26 @@ plot(glm_full)
 # Each of these species is highly represented, so it's possible the bird hospital
 # is simply more experienced in dealing with them
 
+# Subset top ten representatives 
+full_sub = full_set[full_set$Species_Abv == c("RTHA", "BDOW", "EASO", "GHOW", "OSPR", "RSHA", "COHA", "MIKI", "TUVU", "BAEA"),]
+Survive_sub = full_sub$Survive_full
+sp_sub = full_sub$Species_Abv
+doc_sub = full_sub$Duration.of.Care
+glm_sub = glm(Survive_sub ~ sp_sub + doc_sub)
+summary(glm_sub)
+# With the rest of the species removed, species does not have a significant efect on survival
+
+# Let's look at some individual species
+Barred_Owl = strikes[strikes$Other.Idenifier == "BDOW" | strikes$Common.Species.Name == "Barred OWl",]
+Barred_Owl
+glm_BDOW = glm(Barred_Owl$Survive ~ Barred_Owl$Life.Stage + Barred_Owl$Duration.of.Care..in.days. + Barred_Owl$Anatomical.site.of.Injury)
+summary(glm_BDOW)
+
+Red_Tailed_Hawk = strikes[strikes$Other.Idenifier == "RTHA" | strikes$Common.Species.Name == "Red-Tailed Hawk",]
+Red_Tailed_Hawk
+glm_RTHA = glm(Red_Tailed_Hawk$Survive ~ Red_Tailed_Hawk$Life.Stage + Red_Tailed_Hawk$Duration.of.Care..in.days. + Red_Tailed_Hawk$Anatomical.site.of.Injury)
+summary(glm_RTHA)
+
 # The older dataset (1991-2013) has more consistent nomenclature on "Details of Rescue",
 # so examine the factors and see if any play a significant role in survival
 
@@ -130,3 +150,4 @@ for(i in seq(1, nrow(old))){
 }
 old = cbind(old, Survive_old)
 Survive_old = old$Survive_old
+# also not working properly 
