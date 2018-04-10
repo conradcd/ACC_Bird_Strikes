@@ -47,7 +47,7 @@ for(i in seq(1, nrow(full_set)))  {
     full_set$Common.Species.Name[i] = "Bald Eagle"
 }
 
-
+# "Disposition" has quite a few factors that either ammount to 'lived' or 'died',
 # Make survival binary from "Disposition"
 Survive_full = c()
 for(i in seq(1, nrow(full_set))){
