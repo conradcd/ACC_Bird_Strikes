@@ -2,7 +2,6 @@
 install.packages("RCurl")
 library(RCurl)
 
-
 # Read CSV 
 require(RCurl)
 full_set = read.csv(text = getURL("https://raw.githubusercontent.com/conradcd/ACC_Bird_Strikes/master/1991-2017_match.csv"), header = T)
@@ -90,6 +89,21 @@ summary(glm_sub)
 # With the rest of the species removed, species does not have a significant efect on survival
 
 # Let's look at some individual species
+require(RCurl)
+strikes = read.csv(text = getURL("https://raw.githubusercontent.com/conradcd/ACC_Bird_Strikes/master/2012-2017_edit_nodup.csv"), header = T)
+# This data is 2012-2017 and contains more information than the older set
+# Make "Survive" binary 
+Survive = c()
+for(i in seq(1, nrow(strikes))){
+  if(strikes$Disposition[i]=="Died" | strikes$Disposition[i]=="Euthanized") {
+    Survive[i] = 0
+  }
+  else if(strikes$Disposition[i]== "Released" | strikes$Disposition[i]=="Self-Release") {
+    Survive[i] = 1
+  }
+}
+strikes = cbind(strikes, Survive)
+Survive = strikes$Survive
 Barred_Owl = strikes[strikes$Other.Idenifier == "BDOW" | strikes$Common.Species.Name == "Barred OWl",]
 Barred_Owl
 glm_BDOW = glm(Barred_Owl$Survive ~ Barred_Owl$Life.Stage + Barred_Owl$Duration.of.Care..in.days. + Barred_Owl$Anatomical.site.of.Injury)
@@ -151,3 +165,4 @@ for(i in seq(1, nrow(old))){
 old = cbind(old, Survive_old)
 Survive_old = old$Survive_old
 # also not working properly 
+
