@@ -15,7 +15,8 @@ From the Admission and Release dates, I've created a "Duration of Care" column t
 While it has far more information with regard to Rescue details and bird injury/medical care, it lacks consistent nomenclature on many factors and is thus, difficult to analyze. 
 For this reason, I've removed many of the variables and combined this with the older data into a term named "full_set", spanning 1991-2017. 
 
-  The final piece of data contains only that which has been collected in these first few months of 2018, but already has a staggering 90 entries. It was pulled from an online database called "wrmd.org" and has geographic coordinates, way more information than we would ever need on who found the bird, and pretty thorough medical information with respect to not only the specific injury, but also any exams performed on individual birds. 
+  The final piece of data contains only that which has been collected in these first few months of 2018, but already has a staggering 90 entries. It was pulled from an online database called "wrmd.org" and has geographic coordinates, way more information than we would ever need on who found the bird, and pretty thorough medical information with respect to not only the specific injury, but also any exams performed on individual birds.
+ I gave this data a dedicated R.script (named 2018) primarily because it has accurate geographic information, but also because it will continue to grow and can be accessed from the wrmd.org online database. 
 This dataset will become increasingly useful as more is added to it but at the moment serves primarily as a reference for what's to come. 
 
 The code included is in R.Script format and is to be run in order
