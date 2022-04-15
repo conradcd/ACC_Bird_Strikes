@@ -3,9 +3,9 @@
   This project is a working attempt to analyze data collected by the Avian Conservation Center over the last 25 years on inpatient birds either called in or brought to the Birds of Prey Center in Awendaw, SC. 
 The ongoing effort will be to look at (when available) past, and certainly future, geographic data to get a better sense of where birds are being injured in the area. 
 Tracking land-cover change over time and the associated rise in bird injuries/mortalities can at the very least inform, if not direct future area development, from a conservation standpoint. 
-While currently geographic data is sparse at best, I'll now venture to squeeze whatever information I can out of the data I have, as I went to great lengths just to retrieve it and the birds unfortunatelu sacrificed far more. 
+While currently geographic data is sparse at best, I'll now venture to squeeze whatever information I can out of the data I have, as I went to great lengths just to retrieve it and the birds unfortunately sacrificed far more. 
 
-The data comes in three main sets with varying degrees of sophistication and consistancy. 
+The data comes in three main sets with varying degrees of sophistication and consistency. 
 
   The first set, chronologically speaking, I've named "old" and covers the years 1991-2013 stored in an ancient Microsoft Access format and exported to Excel and ultimately CSV. 
 Initially birds are listed only by a four letter abbreviation and "Day Admited, "Day Released", "Disposition", and a few minor "Details of Rescue" are all that are provided. 
